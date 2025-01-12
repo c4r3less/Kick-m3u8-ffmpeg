@@ -1,4 +1,6 @@
+using IronPython.Runtime;
 using Python.Runtime;
+using System.Text.RegularExpressions;
 namespace m3u8cs
 {
     public partial class Form1 : Form
@@ -10,7 +12,8 @@ namespace m3u8cs
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
+            label1.Text = "Link";
+            label2.Text = "m3u8 linki";
         }
 
         private void RunPythonCode()
@@ -65,9 +68,35 @@ namespace m3u8cs
             }
         }
 
+        private void twitchTs()
+        {
+            OpenFileDialog ofd = new OpenFileDialog
+            {
+                Filter = "M3U8 Files (*.m3u8)|*.m3u8|All Files (*.*)|*.*",
+                Title = "M3U8 Dosyasýný Seçin"
+            };
+
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                string path = ofd.FileName;
+                string content = File.ReadAllText(path);
+                Regex tsFind = new Regex(@"(\d+\.ts)", RegexOptions.Multiline);
+                MatchCollection matches = tsFind.Matches(content);
+                listBox1.Items.Clear();
+                foreach (Match match in matches)
+                {
+                    listBox1.Items.Add(match.Value);
+                }
+            }
+        }
         private void button1_Click(object sender, EventArgs e)
         {
             RunPythonCode();
+        }
+
+        private void button2_Click_1(object sender, EventArgs e)
+        {
+            twitchTs();
         }
     }
 }
