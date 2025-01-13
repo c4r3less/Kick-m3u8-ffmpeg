@@ -14,6 +14,8 @@ namespace m3u8cs
         {
             label1.Text = "Link";
             label2.Text = "m3u8 linki";
+            comboBox1.Items.Add("Chrome");
+            comboBox1.Items.Add("FireFox");
         }
 
         private void RunPythonCode()
@@ -23,10 +25,27 @@ namespace m3u8cs
             {
                 dynamic sys = Py.Import("sys");
             }
-
-            runChrome(textBox1.Text);
+            if(comboBox1.SelectedIndex == 0)
+            {
+                runChrome(textBox1.Text);
+            }
+            else if (comboBox1.SelectedIndex == 1)
+            {
+                runFireFox(textBox1.Text);
+            }
         }
-
+        private void runFireFox(string url)
+        {
+            using (Py.GIL())
+            {
+                dynamic selenium = Py.Import("selenium.webdriver");
+                dynamic bs4 = Py.Import("bs4");
+                dynamic driver = selenium.Firefox();
+                driver.get(url);
+                Analyze(driver.page_source.ToString(), bs4);
+                driver.quit();
+            }
+        }
         private void runChrome(string url)
         {
             using (Py.GIL())
@@ -97,6 +116,11 @@ namespace m3u8cs
         private void button2_Click_1(object sender, EventArgs e)
         {
             twitchTs();
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            label1.Text = comboBox1.SelectedIndex.ToString();
         }
     }
 }

@@ -35,6 +35,7 @@
             label1 = new Label();
             label2 = new Label();
             button2 = new Button();
+            comboBox1 = new ComboBox();
             SuspendLayout();
             // 
             // button1
@@ -98,11 +99,21 @@
             button2.UseVisualStyleBackColor = true;
             button2.Click += button2_Click_1;
             // 
+            // comboBox1
+            // 
+            comboBox1.FormattingEnabled = true;
+            comboBox1.Location = new Point(201, 33);
+            comboBox1.Name = "comboBox1";
+            comboBox1.Size = new Size(121, 23);
+            comboBox1.TabIndex = 7;
+            comboBox1.SelectedIndexChanged += comboBox1_SelectedIndexChanged;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(comboBox1);
             Controls.Add(button2);
             Controls.Add(label2);
             Controls.Add(label1);
@@ -126,5 +137,6 @@
         private Label label1;
         private Label label2;
         private Button button2;
+        private ComboBox comboBox1;
     }
 }
