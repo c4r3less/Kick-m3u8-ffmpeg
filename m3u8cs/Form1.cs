@@ -12,8 +12,8 @@ namespace m3u8cs
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            label1.Text = "Link";
-            label2.Text = "m3u8 linki";
+            label1.Text = "site link";
+            label2.Text = "m3u8:";
             comboBox1.Items.Add("Chrome");
             comboBox1.Items.Add("FireFox");
         }
@@ -25,40 +25,35 @@ namespace m3u8cs
             {
                 dynamic sys = Py.Import("sys");
             }
-            if(comboBox1.SelectedIndex == 0)
-            {
-                runChrome(textBox1.Text);
-            }
-            else if (comboBox1.SelectedIndex == 1)
-            {
-                runFireFox(textBox1.Text);
-            }
+                run_av(textBox1.Text);    
         }
-        private void runFireFox(string url)
+        private void run_av(string url)
         {
             using (Py.GIL())
             {
                 dynamic selenium = Py.Import("selenium.webdriver");
                 dynamic bs4 = Py.Import("bs4");
-                dynamic driver = selenium.Firefox();
-                driver.get(url);
-                Analyze(driver.page_source.ToString(), bs4);
-                driver.quit();
+                if(comboBox1.SelectedIndex == 0) 
+                {
+                    dynamic driver = selenium.Chrome();
+                    driver.get(url);
+                    Analyze(driver.page_source.ToString(), bs4);
+                    driver.quit();
+                }
+                else if(comboBox1.SelectedIndex == 1) 
+                {
+                    dynamic driver = selenium.Firefox();
+                    driver.get(url);
+                    Analyze(driver.page_source.ToString(), bs4);
+                    driver.quit();
+                }
+                else
+                {
+                    MessageBox.Show("Please select a browser.");
+                }              
+                
             }
         }
-        private void runChrome(string url)
-        {
-            using (Py.GIL())
-            {
-                dynamic selenium = Py.Import("selenium.webdriver");
-                dynamic bs4 = Py.Import("bs4");
-                dynamic driver = selenium.Chrome();
-                driver.get(url);
-                Analyze(driver.page_source.ToString(), bs4);
-                driver.quit();
-            }
-        }
-
         private void Analyze(string html, dynamic bs4)
         {
             using (Py.GIL())
