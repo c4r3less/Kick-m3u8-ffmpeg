@@ -33,25 +33,32 @@ namespace m3u8cs
             {
                 dynamic selenium = Py.Import("selenium.webdriver");
                 dynamic bs4 = Py.Import("bs4");
-                if(comboBox1.SelectedIndex == 0) 
+                if (!string.IsNullOrEmpty(textBox1.Text))
                 {
-                    dynamic driver = selenium.Chrome();
-                    driver.get(url);
-                    Analyze(driver.page_source.ToString(), bs4);
-                    driver.quit();
-                }
-                else if(comboBox1.SelectedIndex == 1) 
-                {
-                    dynamic driver = selenium.Firefox();
-                    driver.get(url);
-                    Analyze(driver.page_source.ToString(), bs4);
-                    driver.quit();
+                    if (comboBox1.SelectedIndex == 0)
+                    {
+                        dynamic driver = selenium.Chrome();
+                        driver.get(url);
+                        Analyze(driver.page_source.ToString(), bs4);
+                        driver.quit();
+                    }
+                    else if (comboBox1.SelectedIndex == 1 && textBox1.Text == "")
+                    {
+                        dynamic driver = selenium.Firefox();
+                        driver.get(url);
+                        Analyze(driver.page_source.ToString(), bs4);
+                        driver.quit();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Please select a browser.");
+                    }
                 }
                 else
                 {
-                    MessageBox.Show("Please select a browser.");
-                }              
-                
+                    MessageBox.Show("Please enter a link.");
+
+                }
             }
         }
         private void Analyze(string html, dynamic bs4)
