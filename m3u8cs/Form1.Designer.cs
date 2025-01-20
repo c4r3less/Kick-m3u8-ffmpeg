@@ -30,12 +30,14 @@
         {
             button1 = new Button();
             textBox1 = new TextBox();
-            textBox2 = new TextBox();
             listBox1 = new ListBox();
             label1 = new Label();
             label2 = new Label();
             button2 = new Button();
             comboBox1 = new ComboBox();
+            richTextBox1 = new RichTextBox();
+            button3 = new Button();
+            progressBar1 = new ProgressBar();
             SuspendLayout();
             // 
             // button1
@@ -54,13 +56,6 @@
             textBox1.Name = "textBox1";
             textBox1.Size = new Size(100, 23);
             textBox1.TabIndex = 1;
-            // 
-            // textBox2
-            // 
-            textBox2.Location = new Point(29, 145);
-            textBox2.Name = "textBox2";
-            textBox2.Size = new Size(100, 23);
-            textBox2.TabIndex = 2;
             // 
             // listBox1
             // 
@@ -108,17 +103,44 @@
             comboBox1.TabIndex = 7;
             comboBox1.SelectedIndexChanged += comboBox1_SelectedIndexChanged;
             // 
+            // richTextBox1
+            // 
+            richTextBox1.Location = new Point(29, 145);
+            richTextBox1.Name = "richTextBox1";
+            richTextBox1.Size = new Size(197, 185);
+            richTextBox1.TabIndex = 9;
+            richTextBox1.Text = "";
+            // 
+            // button3
+            // 
+            button3.Location = new Point(29, 352);
+            button3.Name = "button3";
+            button3.Size = new Size(75, 23);
+            button3.TabIndex = 10;
+            button3.Text = "button3";
+            button3.UseVisualStyleBackColor = true;
+            button3.Click += button3_Click;
+            // 
+            // progressBar1
+            // 
+            progressBar1.Location = new Point(29, 398);
+            progressBar1.Name = "progressBar1";
+            progressBar1.Size = new Size(197, 23);
+            progressBar1.TabIndex = 11;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(progressBar1);
+            Controls.Add(button3);
+            Controls.Add(richTextBox1);
             Controls.Add(comboBox1);
             Controls.Add(button2);
             Controls.Add(label2);
             Controls.Add(label1);
             Controls.Add(listBox1);
-            Controls.Add(textBox2);
             Controls.Add(textBox1);
             Controls.Add(button1);
             Name = "Form1";
@@ -132,11 +154,13 @@
 
         private Button button1;
         private TextBox textBox1;
-        private TextBox textBox2;
         private ListBox listBox1;
         private Label label1;
         private Label label2;
         private Button button2;
         private ComboBox comboBox1;
+        private RichTextBox richTextBox1;
+        private Button button3;
+        private ProgressBar progressBar1;
     }
 }

@@ -1,5 +1,6 @@
-using IronPython.Runtime;
 using Python.Runtime;
+using System.Diagnostics;
+using System.Drawing.Drawing2D;
 using System.Text.RegularExpressions;
 namespace m3u8cs
 {
@@ -18,47 +19,49 @@ namespace m3u8cs
             comboBox1.Items.Add("FireFox");
         }
 
-        private void RunPythonCode()
+        private void RunPythonCode(string url)
         {
-            PythonEngine.Initialize();
-            using (Py.GIL())
+            try
             {
-                dynamic sys = Py.Import("sys");
-            }
-                run_av(textBox1.Text);    
-        }
-        private void run_av(string url)
-        {
-            using (Py.GIL())
-            {
-                dynamic selenium = Py.Import("selenium.webdriver");
-                dynamic bs4 = Py.Import("bs4");
-                if (!string.IsNullOrEmpty(textBox1.Text))
+                using (Py.GIL())
                 {
-                    if (comboBox1.SelectedIndex == 0)
+                    dynamic selenium = Py.Import("selenium.webdriver");
+                    dynamic time = Py.Import("time");
+                    dynamic bs4 = Py.Import("bs4");
+                    dynamic sys = Py.Import("sys");
+                    if (!string.IsNullOrEmpty(url))
                     {
-                        dynamic driver = selenium.Chrome();
-                        driver.get(url);
-                        Analyze(driver.page_source.ToString(), bs4);
-                        driver.quit();
-                    }
-                    else if (comboBox1.SelectedIndex == 1 && textBox1.Text == "")
-                    {
-                        dynamic driver = selenium.Firefox();
-                        driver.get(url);
-                        Analyze(driver.page_source.ToString(), bs4);
-                        driver.quit();
+                        if (comboBox1.SelectedIndex == 0)
+                        {
+                            dynamic driver = selenium.Chrome();
+                            driver.get(url);
+                            time.sleep(10);
+                            Analyze(driver.page_source.ToString(), bs4);
+                            driver.quit();
+                        }
+                        else if (comboBox1.SelectedIndex == 1)
+                        {
+                            dynamic driver = selenium.Firefox();
+                            driver.get(url);
+                            time.sleep(10);
+                            Analyze(driver.page_source.ToString(), bs4);
+                            driver.quit();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Please select a browser.");
+                        }
                     }
                     else
                     {
-                        MessageBox.Show("Please select a browser.");
+                        MessageBox.Show("Please enter a link.");
+
                     }
                 }
-                else
-                {
-                    MessageBox.Show("Please enter a link.");
-
-                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
         private void Analyze(string html, dynamic bs4)
@@ -79,17 +82,17 @@ namespace m3u8cs
                 {
                     if (script.text.ToString().Contains("m3u8"))
                     {
-                        var links = re.findall(@"https?://stream\.kick[^\s]+\.m3u8", script.text);
+                        var links = re.findall(@"https?://[^\s\""]+\/master.m3u8", script.text);
                         foreach (var link in links)
                         {
-                            textBox2.AppendText(link + Environment.NewLine);
+                            richTextBox1.AppendText(link + Environment.NewLine);
                         }
                     }
                 }
             }
         }
 
-        private void twitchTs()
+        private void combTs()
         {
             OpenFileDialog ofd = new OpenFileDialog
             {
@@ -112,17 +115,55 @@ namespace m3u8cs
         }
         private void button1_Click(object sender, EventArgs e)
         {
-            RunPythonCode();
+            RunPythonCode(textBox1.Text);
         }
 
         private void button2_Click_1(object sender, EventArgs e)
         {
-            twitchTs();
+            combTs();
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             label1.Text = comboBox1.SelectedIndex.ToString();
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            if (richTextBox1.Text.Length > 0)
+            {
+                string link = richTextBox1.Lines[0];
+                SaveFileDialog save = new SaveFileDialog
+                {
+                    Filter = "MP4 Video (*.mp4)|*.mp4",
+                    Title = "Save MP4 File"
+                };
+                if (save.ShowDialog() == DialogResult.OK)
+                {
+                    FFmpeg(link, save.FileName, Path.GetDirectoryName(save.FileName));
+                }
+            }
+        }
+        private void FFmpeg(string m3u8Link, string output, string outputDir)
+        {
+            ProcessStartInfo ff = new ProcessStartInfo
+            {
+                FileName = "cmd.exe",
+                WorkingDirectory = outputDir,
+                CreateNoWindow = false,
+                RedirectStandardInput = true,
+                UseShellExecute = false
+            };
+            
+            Process process = new Process
+            {
+                StartInfo = ff
+            };
+            process.Start();
+;
+            process.StandardInput.WriteLine($"ffmpeg -i \"{m3u8Link}\" -c copy \"{output}\"");
+            process.StandardInput.Close();
+            process.WaitForExit();
         }
     }
 }
