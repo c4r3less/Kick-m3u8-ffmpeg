@@ -92,37 +92,10 @@ namespace m3u8cs
             }
         }
 
-        private void combTs()
-        {
-            OpenFileDialog ofd = new OpenFileDialog
-            {
-                Filter = "M3U8 Files (*.m3u8)|*.m3u8|All Files (*.*)|*.*",
-                Title = "M3U8 Dosyasýný Seçin"
-            };
-
-            if (ofd.ShowDialog() == DialogResult.OK)
-            {
-                string path = ofd.FileName;
-                string content = File.ReadAllText(path);
-                Regex tsFind = new Regex(@"(\d+\.ts)", RegexOptions.Multiline);
-                MatchCollection matches = tsFind.Matches(content);
-                listBox1.Items.Clear();
-                foreach (Match match in matches)
-                {
-                    listBox1.Items.Add(match.Value);
-                }
-            }
-        }
         private void button1_Click(object sender, EventArgs e)
         {
             RunPythonCode(textBox1.Text);
         }
-
-        private void button2_Click_1(object sender, EventArgs e)
-        {
-            combTs();
-        }
-
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             label1.Text = comboBox1.SelectedIndex.ToString();
